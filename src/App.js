@@ -2,9 +2,19 @@ import "./App.css"
 import { useState, useEffect } from "react"
 import img from "./Cluck new.png"
 
+const users = {
+  manager: {
+    code: 9876,
+  },
+  admin: {
+    code: 1234,
+  },
+}
+
 function App() {
   const [code, setCode] = useState(0)
   const [login, setLogin] = useState(0)
+  const [isadmin, setAdmin] = useState(true)
   const [stocks, setstocks] = useState([
     {
       id: Math.random() * 1000,
@@ -33,6 +43,12 @@ function App() {
   ])
   useEffect(function () {
     if (localStorage.getItem("login")) {
+      if (
+        localStorage.getItem("type") &&
+        parseInt(localStorage.getItem("type")) === users.admin.code
+      ) {
+        setAdmin(true)
+      }
       setLogin(1)
     } else {
       setLogin(0)
@@ -109,11 +125,33 @@ function App() {
         </div>
         {login === 1 ? (
           <>
+            <div className="container-fluid d-flex align-items-end justify-content-end">
+              {isadmin && (
+                <button className="btn btn-sm btn-success me-2">Add</button>
+              )}
+              <button
+                onClick={() => {
+                  localStorage.removeItem("login")
+                  localStorage.removeItem("type")
+                  setLogin(0)
+                  setAdmin(false)
+                }}
+                className="btn btn-sm btn-warning"
+              >
+                Logout
+              </button>
+            </div>
             <h3>Search bar goes here</h3>
+
             <Main setstock={setstocks} stock={stocks} />
           </>
         ) : (
-          <LoginForm code={code} setcode={setCode} setLogin={setLogin} />
+          <LoginForm
+            setAdmin={setAdmin}
+            code={code}
+            setcode={setCode}
+            setLogin={setLogin}
+          />
         )}
       </div>
     </div>
@@ -121,19 +159,58 @@ function App() {
 }
 
 function LoginForm(props) {
+  const [er, seter] = useState(false)
+
+  useEffect(() => {
+    function clear() {
+      seter(false)
+    }
+
+    setTimeout(clear, 2000)
+    clearInterval()
+  }, [er])
+
   function login(e) {
     e.preventDefault()
 
+    if (
+      !parseInt(props.code) === users.admin.code ||
+      !parseInt(props.code) === users.manager.code
+    ) {
+      seter(true)
+      return
+    }
+
     if (localStorage.getItem("login")) {
+      if (parseInt(localStorage.getItem("type")) === users.admin.code) {
+        props.setAdmin(false)
+      }
       props.setLogin(1)
       return
     }
+
+    if (parseInt(props.code) === users.admin.code) {
+      localStorage.setItem("type", users.admin.code)
+    } else if (parseInt(props.code) === users.manager.code) {
+      localStorage.setItem("type", users.manager.code)
+    } else {
+      seter(true)
+      return
+    }
+
     localStorage.setItem("login", 1)
 
     props.setLogin(1)
   }
   return (
     <div className="container">
+      {er ? (
+        <div className="row">
+          <p className="alert mx-auto w-75 alert-danger text-center">
+            Code is invalid!
+          </p>
+        </div>
+      ) : null}
       <div className="row">
         <div className="col-10 col-md-6 mx-auto border border-2 p-4 ">
           <form onSubmit={login}>
