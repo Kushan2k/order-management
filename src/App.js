@@ -45,6 +45,16 @@ function App() {
     }
   }, [])
 
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednsday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ]
+
   return (
     <div
       className="App"
@@ -67,7 +77,11 @@ function App() {
         }}
       >
         <img src={img} alt="logo" width={80} height={80} />
-        <h2>date </h2>
+        <p className="text-end ">
+          {new Date().toISOString().split("T")[0]}
+          <br />
+          {days[new Date().getDay()]}
+        </p>
       </div>
       <div
         style={{
