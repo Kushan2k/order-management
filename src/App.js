@@ -163,7 +163,7 @@ function LoginForm(props) {
 function Main({ setstock, stock }) {
   return stock.map((item, index) => {
     return (
-      <div className="container" key={index}>
+      <div className="container-fluid" key={index}>
         <Item item={item} stock={stock} setitem={setstock} index={index} />
       </div>
     )
@@ -173,7 +173,7 @@ function Main({ setstock, stock }) {
 function Item(props) {
   return (
     <div className="row">
-      <div className="col-10 mx-auto">
+      <div className="col-11 mx-auto">
         <div className="card my-2">
           <div className="card-body">
             <div className="form-check d-flex justify-content-between">
