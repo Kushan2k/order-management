@@ -1,6 +1,9 @@
 import "./App.css"
 import { useState, useEffect } from "react"
 import img from "./Cluck new.png"
+import Button from "react-bootstrap/Button"
+import Modal from "react-bootstrap/Modal"
+import { Form } from "react-bootstrap"
 
 const users = {
   manager: {
@@ -11,36 +14,62 @@ const users = {
   },
 }
 
+const data = [
+  {
+    id: Math.random() * 1000,
+    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd34",
+    qty: 0,
+    selected: false,
+  },
+  {
+    id: Math.random() * 1000,
+    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
+    qty: 0,
+    selected: false,
+  },
+  {
+    id: Math.random() * 1000,
+    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd56",
+    qty: 0,
+    selected: false,
+  },
+  {
+    id: Math.random() * 1000,
+    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
+    qty: 0,
+    selected: false,
+  },
+  {
+    id: Math.random() * 1000,
+    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
+    qty: 0,
+    selected: false,
+  },
+  {
+    id: Math.random() * 1000,
+    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
+    qty: 0,
+    selected: false,
+  },
+  {
+    id: Math.random() * 1000,
+    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
+    qty: 0,
+    selected: false,
+  },
+]
+
 function App() {
   const [code, setCode] = useState(0)
   const [login, setLogin] = useState(0)
-  const [isadmin, setAdmin] = useState(true)
-  const [stocks, setstocks] = useState([
-    {
-      id: Math.random() * 1000,
-      name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd34",
-      qty: 0,
-      selected: false,
-    },
-    {
-      id: Math.random() * 1000,
-      name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
-      qty: 0,
-      selected: false,
-    },
-    {
-      id: Math.random() * 1000,
-      name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd56",
-      qty: 0,
-      selected: false,
-    },
-    {
-      id: Math.random() * 1000,
-      name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
-      qty: 0,
-      selected: false,
-    },
-  ])
+  const [show, setShow] = useState(false)
+  const [serachtxt, setsearch] = useState("")
+
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+  const [isadmin, setAdmin] = useState(false)
+  const [name, setName] = useState("")
+  const [stocks, setstocks] = useState(data)
   useEffect(function () {
     if (localStorage.getItem("login")) {
       if (
@@ -54,6 +83,23 @@ function App() {
       setLogin(0)
     }
   }, [])
+
+  useEffect(() => {
+    const selected = stocks.filter((item) => item.selected)
+    console.log(selected)
+    if (serachtxt === "") {
+      let nd = data.map((i) => {
+        return i
+      })
+      setstocks(nd)
+      return
+    }
+
+    const newl = stocks.filter((item) =>
+      item.name.toLowerCase().includes(serachtxt.toLowerCase())
+    )
+    setstocks(newl)
+  }, [serachtxt])
 
   const days = [
     "Sunday",
@@ -104,18 +150,19 @@ function App() {
         }}
       >
         <div
-          className="position-absolute"
+          className="position-fixed"
           style={{
             borderRadius: "50%",
 
             bottom: 20,
             right: 20,
+            zIndex: 100,
           }}
         >
           <button
             onClick={() => {
               const l = stocks.filter((sto) => sto.selected)
-              console.log(l)
+              alert(name)
             }}
             style={{ borderRadius: "50%", height: 70, width: 70 }}
             className="btn btn-success p-3"
@@ -127,7 +174,12 @@ function App() {
           <>
             <div className="container-fluid d-flex align-items-end justify-content-end">
               {isadmin && (
-                <button className="btn btn-sm btn-success me-2">Add</button>
+                <button
+                  onClick={handleShow}
+                  className="btn btn-sm btn-success me-2"
+                >
+                  Add
+                </button>
               )}
               <button
                 onClick={() => {
@@ -141,7 +193,23 @@ function App() {
                 Logout
               </button>
             </div>
-            <h3>Search bar goes here</h3>
+            <PopUpModel show={show} handleClose={handleClose} />
+            <div className="container my-3 ">
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Company Name"
+                type="text"
+                className="form-control my-2 form-control-sm border border-primary border-1"
+              />
+              <input
+                value={serachtxt}
+                onChange={(e) => setsearch(e.target.value)}
+                placeholder="Search Here"
+                type="text"
+                className="form-control my-2 form-control-sm border border-primary border-1"
+              />
+            </div>
 
             <Main setstock={setstocks} stock={stocks} />
           </>
@@ -172,6 +240,7 @@ function LoginForm(props) {
 
   function login(e) {
     e.preventDefault()
+    props.setcode(0)
 
     if (
       !parseInt(props.code) === users.admin.code ||
@@ -183,7 +252,7 @@ function LoginForm(props) {
 
     if (localStorage.getItem("login")) {
       if (parseInt(localStorage.getItem("type")) === users.admin.code) {
-        props.setAdmin(false)
+        props.setAdmin(true)
       }
       props.setLogin(1)
       return
@@ -191,6 +260,7 @@ function LoginForm(props) {
 
     if (parseInt(props.code) === users.admin.code) {
       localStorage.setItem("type", users.admin.code)
+      props.setAdmin(true)
     } else if (parseInt(props.code) === users.manager.code) {
       localStorage.setItem("type", users.manager.code)
     } else {
@@ -266,6 +336,7 @@ function Item(props) {
                         return {
                           ...i,
                           selected: e.target.checked,
+                          qty: e.target.checked ? 1 : 0,
                         }
                       }
                       return i
@@ -292,7 +363,8 @@ function Item(props) {
                         if (i.id === props.item.id) {
                           return {
                             ...i,
-                            qty: e.target.value,
+                            qty:
+                              parseInt(e.target.value) > 0 ? e.target.value : 0,
                           }
                         }
                         return i
@@ -309,6 +381,45 @@ function Item(props) {
         </div>
       </div>
     </div>
+  )
+}
+
+function PopUpModel({ show, handleClose }) {
+  function save(e) {
+    e.preventDefault()
+  }
+
+  return (
+    <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Item</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={save}>
+          <Modal.Body>
+            <div className="mb-3">
+              <label htmlFor="formGroupExampleInput" className="form-label">
+                Item Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="formGroupExampleInput"
+                placeholder="Example input placeholder"
+              />
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button type="submit" variant="primary">
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+    </>
   )
 }
 
