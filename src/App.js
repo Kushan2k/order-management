@@ -411,13 +411,13 @@ function Item(props) {
               />
               <div className="d-flex align-content-center justify-content-end">
                 <label
-                  className="form-check-label"
+                  className="form-check-label text-wrap"
                   htmlFor={"flexCheckChecked" + props.index}
                 >
                   {props.item.name}
                 </label>
                 <input
-                  style={{ width: 100 }}
+                  style={{ width: "20%" }}
                   readOnly={!props.item.selected}
                   type="number"
                   value={props.item.qty}
