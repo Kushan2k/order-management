@@ -76,7 +76,7 @@ function App() {
   const [serachtxt, setsearch] = useState("")
 
   const [genrate, setgenarate] = useState(false)
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(0)
 
   const [selecteditem, setselectedItem] = useState([])
 
@@ -182,40 +182,37 @@ function App() {
             zIndex: 100,
           }}
         >
-          {loading ? (
-            genrate && (
-              <PDFDownloadLink
-                onClick={() => {
-                  setgenarate(false)
-                  setloading(false)
-                }}
-                document={
-                  <PDF
-                    name={name}
-                    items={stocks}
-                    close={setgenarate}
-                    loading={setloading}
-                  />
-                }
-                fileName={`${name}-${new Date().toISOString()}.pdf`}
-                style={{ borderRadius: "50%", height: 70, width: 70 }}
-                className="btn btn-outline-success p-3 d-flex justify-content-center align-items-center"
-              >
-                {({ blob, url, loading, error }) =>
-                  loading ? (
-                    <Spinner variant="success" animation="border" />
-                  ) : (
-                    "Save"
-                  )
-                }
-              </PDFDownloadLink>
-            )
+          {loading === 1 ? (
+            <PDFDownloadLink
+              onClick={() => {
+                setloading(0)
+              }}
+              document={
+                <PDF
+                  name={name}
+                  items={stocks}
+                  close={setgenarate}
+                  loading={setloading}
+                />
+              }
+              fileName={`${name}-${new Date().toISOString()}.pdf`}
+              style={{ borderRadius: "50%", height: 70, width: 70 }}
+              className="btn btn-outline-success p-3 d-flex justify-content-center align-items-center"
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? (
+                  <Spinner variant="success" animation="border" />
+                ) : (
+                  "Save"
+                )
+              }
+            </PDFDownloadLink>
           ) : (
             <Button
               variant="success"
               className="rounded"
               onClick={() => {
-                setloading(true)
+                setloading(1)
                 setgenarate(true)
               }}
             >
@@ -268,7 +265,7 @@ function App() {
               </div>
             </div>
 
-            {loading ? (
+            {loading === 1 ? (
               <div className="container mt-5 h-75 flex-column d-flex justify-content-center align-items-center">
                 <div className="d-flex gap-1">
                   <Spinner animation="grow" variant="success" />
@@ -420,6 +417,7 @@ function Item(props) {
                   {props.item.name}
                 </label>
                 <input
+                  style={{ width: 100 }}
                   readOnly={!props.item.selected}
                   type="number"
                   value={props.item.qty}
@@ -439,7 +437,7 @@ function Item(props) {
                       return nd
                     })
                   }
-                  className="form-control form-control-sm w-25 ms-2 text-center border border-primary border-2"
+                  className="form-control form-control-sm ms-2 text-center border border-primary border-2"
                 />
               </div>
             </div>
@@ -554,7 +552,7 @@ function PDF({ name, items, close, loading }) {
   }, [])
 
   return (
-    <Document onRender={() => null /*loading(false)*/}>
+    <Document onRender={() => null}>
       <Page style={styles.body} size="A4">
         <Text style={styles.header} fixed>
           ~ Cluck PVT Ltd ~
@@ -570,9 +568,7 @@ function PDF({ name, items, close, loading }) {
         >
           <Image style={styles.logo} src={img} />
           <View>
-            <Text style={styles.title}>
-              {name !== "" ? name : "No name provided"}
-            </Text>
+            <Text style={styles.title}>{name}</Text>
             <Text style={styles.date}>
               {new Date().toISOString().split("T")[0]}
             </Text>
@@ -580,7 +576,7 @@ function PDF({ name, items, close, loading }) {
         </View>
 
         <Text style={styles.text}>Items</Text>
-        <View style={{ borderBottom: "2px solid black", height: 10 }}></View>
+        <View style={{ borderBottom: "1px solid black", height: 10 }}></View>
         <View
           style={{
             display: "flex",
