@@ -428,7 +428,9 @@ function Item(props) {
                           return {
                             ...i,
                             qty:
-                              parseInt(e.target.value) > 0 ? e.target.value : 0,
+                              parseInt(e.target.value) > 0
+                                ? e.target.value
+                                : "",
                           }
                         }
                         return i
