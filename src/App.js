@@ -3,7 +3,17 @@ import { useState, useEffect } from "react"
 import img from "./Cluck new.png"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
-import { Form } from "react-bootstrap"
+import { Form, Spinner } from "react-bootstrap"
+import {
+  Document,
+  Font,
+  Image,
+  PDFDownloadLink,
+  Page,
+  StyleSheet,
+  Text,
+  View,
+} from "@react-pdf/renderer"
 
 const users = {
   manager: {
@@ -65,6 +75,10 @@ function App() {
   const [show, setShow] = useState(false)
   const [serachtxt, setsearch] = useState("")
 
+  const [genrate, setgenarate] = useState(true)
+
+  const [selecteditem, setselectedItem] = useState([])
+
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
   const [isadmin, setAdmin] = useState(false)
@@ -86,11 +100,18 @@ function App() {
 
   useEffect(() => {
     const selected = stocks.filter((item) => item.selected)
-    console.log(selected)
+    setselectedItem(selected)
+
     if (serachtxt === "") {
       let nd = data.map((i) => {
+        if (selecteditem.includes(i.id)) {
+          return {
+            ...selecteditem.find((l) => l.id === i.id),
+          }
+        }
         return i
       })
+
       setstocks(nd)
       return
     }
@@ -99,6 +120,7 @@ function App() {
       item.name.toLowerCase().includes(serachtxt.toLowerCase())
     )
     setstocks(newl)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serachtxt])
 
   const days = [
@@ -159,16 +181,20 @@ function App() {
             zIndex: 100,
           }}
         >
-          <button
-            onClick={() => {
-              const l = stocks.filter((sto) => sto.selected)
-              alert(name)
-            }}
-            style={{ borderRadius: "50%", height: 70, width: 70 }}
-            className="btn btn-success p-3"
-          >
-            Save
-          </button>
+          {!genrate ? (
+            <PDFDownloadLink
+              document={<PDF name={name} items={stocks} close={setgenarate} />}
+              fileName={`${name}-${new Date().toISOString()}.pdf`}
+              style={{ borderRadius: "50%", height: 70, width: 70 }}
+              className="btn btn-success p-3 d-flex justify-content-center align-items-center"
+            >
+              Save
+            </PDFDownloadLink>
+          ) : (
+            <Button variant="success" onClick={() => setgenarate(true)}>
+              Genarate
+            </Button>
+          )}
         </div>
         {login === 1 ? (
           <>
@@ -195,23 +221,36 @@ function App() {
             </div>
             <PopUpModel show={show} handleClose={handleClose} />
             <div className="container my-3 ">
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Company Name"
-                type="text"
-                className="form-control my-2 form-control-sm border border-primary border-1"
-              />
-              <input
-                value={serachtxt}
-                onChange={(e) => setsearch(e.target.value)}
-                placeholder="Search Here"
-                type="text"
-                className="form-control my-2 form-control-sm border border-primary border-1"
-              />
+              <div className="row">
+                <div className="col-10 mx-auto">
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Company Name"
+                    type="text"
+                    className="form-control my-2 form-control-sm border border-primary border-1"
+                  />
+                  <input
+                    value={serachtxt}
+                    onChange={(e) => setsearch(e.target.value)}
+                    placeholder="Search Here"
+                    type="text"
+                    className="form-control my-2 form-control-sm border border-primary border-1"
+                  />
+                </div>
+              </div>
             </div>
 
-            <Main setstock={setstocks} stock={stocks} />
+            {genrate ? (
+              <div className="container mt-5 h-75 flex-column d-flex justify-content-center align-items-center">
+                <div className="d-flex gap-1">
+                  <Spinner animation="grow" variant="success" />
+                </div>
+                <p>Generating....</p>
+              </div>
+            ) : (
+              <Main setstock={setstocks} stock={stocks} />
+            )}
           </>
         ) : (
           <LoginForm
@@ -420,6 +459,151 @@ function PopUpModel({ show, handleClose }) {
         </Form>
       </Modal>
     </>
+  )
+}
+
+function PDF({ name, items, close }) {
+  const [pdfitems, setitems] = useState([])
+  Font.register({
+    family: "Oswald",
+    src: "https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf",
+  })
+
+  const styles = StyleSheet.create({
+    logo: {
+      width: 70,
+      height: 70,
+    },
+    body: {
+      paddingTop: 35,
+      paddingBottom: 65,
+      paddingHorizontal: 35,
+    },
+    title: {
+      fontSize: 24,
+      textAlign: "center",
+      fontFamily: "Oswald",
+    },
+    date: {
+      fontSize: 12,
+      textAlign: "center",
+      marginBottom: 40,
+    },
+    subtitle: {
+      fontSize: 18,
+      margin: 12,
+      fontFamily: "Oswald",
+    },
+    text: {
+      margin: 12,
+      fontSize: 14,
+      textAlign: "justify",
+      fontFamily: "Oswald",
+    },
+    image: {
+      marginVertical: 15,
+      marginHorizontal: 100,
+    },
+    header: {
+      fontSize: 12,
+      marginBottom: 20,
+      textAlign: "center",
+      color: "grey",
+    },
+    pageNumber: {
+      position: "absolute",
+      fontSize: 12,
+      bottom: 30,
+      left: 0,
+      right: 0,
+      textAlign: "center",
+      color: "grey",
+    },
+  })
+
+  useEffect(() => {
+    setitems(items.filter((item) => item.selected))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <Document onRender={() => console.log("done")}>
+      <Page style={styles.body} size="A4">
+        <Text style={styles.header} fixed>
+          ~ Cluck PVT Ltd ~
+        </Text>
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginHorizontal: 10,
+          }}
+        >
+          <Image style={styles.logo} src={img} />
+          <View>
+            <Text style={styles.title}>{name}</Text>
+            <Text style={styles.date}>
+              {new Date().toISOString().split("T")[0]}
+            </Text>
+          </View>
+        </View>
+
+        <Text style={styles.text}>Items</Text>
+        <View style={{ borderBottom: "2px solid black", height: 10 }}></View>
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingHorizontal: 10,
+              marginVertical: 10,
+              flexDirection: "row",
+              width: "80%",
+            }}
+          >
+            <Text>Item</Text>
+            <Text>QTY</Text>
+          </View>
+          {pdfitems.length > 0 &&
+            pdfitems.map((item, index) => {
+              return (
+                <View
+                  key={index}
+                  style={{
+                    marginTop: 10,
+                    width: "80%",
+                    paddingHorizontal: 10,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Text style={styles.date}>{item.name}</Text>
+                  <Text style={styles.date}>{item.qty}</Text>
+                </View>
+              )
+            })}
+        </View>
+
+        <Text
+          style={styles.pageNumber}
+          render={({ pageNumber, totalPages }) =>
+            `${pageNumber} / ${totalPages}`
+          }
+          fixed
+        />
+      </Page>
+    </Document>
   )
 }
 
