@@ -75,7 +75,8 @@ function App() {
   const [show, setShow] = useState(false)
   const [serachtxt, setsearch] = useState("")
 
-  const [genrate, setgenarate] = useState(true)
+  const [genrate, setgenarate] = useState(false)
+  const [loading, setloading] = useState(false)
 
   const [selecteditem, setselectedItem] = useState([])
 
@@ -181,17 +182,43 @@ function App() {
             zIndex: 100,
           }}
         >
-          {!genrate ? (
-            <PDFDownloadLink
-              document={<PDF name={name} items={stocks} close={setgenarate} />}
-              fileName={`${name}-${new Date().toISOString()}.pdf`}
-              style={{ borderRadius: "50%", height: 70, width: 70 }}
-              className="btn btn-success p-3 d-flex justify-content-center align-items-center"
-            >
-              Save
-            </PDFDownloadLink>
+          {loading ? (
+            genrate && (
+              <PDFDownloadLink
+                onClick={() => {
+                  setgenarate(false)
+                  setloading(false)
+                }}
+                document={
+                  <PDF
+                    name={name}
+                    items={stocks}
+                    close={setgenarate}
+                    loading={setloading}
+                  />
+                }
+                fileName={`${name}-${new Date().toISOString()}.pdf`}
+                style={{ borderRadius: "50%", height: 70, width: 70 }}
+                className="btn btn-outline-success p-3 d-flex justify-content-center align-items-center"
+              >
+                {({ blob, url, loading, error }) =>
+                  loading ? (
+                    <Spinner variant="success" animation="border" />
+                  ) : (
+                    "Save"
+                  )
+                }
+              </PDFDownloadLink>
+            )
           ) : (
-            <Button variant="success" onClick={() => setgenarate(true)}>
+            <Button
+              variant="success"
+              className="rounded"
+              onClick={() => {
+                setloading(true)
+                setgenarate(true)
+              }}
+            >
               Genarate
             </Button>
           )}
@@ -241,7 +268,7 @@ function App() {
               </div>
             </div>
 
-            {genrate ? (
+            {loading ? (
               <div className="container mt-5 h-75 flex-column d-flex justify-content-center align-items-center">
                 <div className="d-flex gap-1">
                   <Spinner animation="grow" variant="success" />
@@ -462,7 +489,7 @@ function PopUpModel({ show, handleClose }) {
   )
 }
 
-function PDF({ name, items, close }) {
+function PDF({ name, items, close, loading }) {
   const [pdfitems, setitems] = useState([])
   Font.register({
     family: "Oswald",
@@ -527,7 +554,7 @@ function PDF({ name, items, close }) {
   }, [])
 
   return (
-    <Document onRender={() => console.log("done")}>
+    <Document onRender={() => null /*loading(false)*/}>
       <Page style={styles.body} size="A4">
         <Text style={styles.header} fixed>
           ~ Cluck PVT Ltd ~
@@ -543,7 +570,9 @@ function PDF({ name, items, close }) {
         >
           <Image style={styles.logo} src={img} />
           <View>
-            <Text style={styles.title}>{name}</Text>
+            <Text style={styles.title}>
+              {name !== "" ? name : "No name provided"}
+            </Text>
             <Text style={styles.date}>
               {new Date().toISOString().split("T")[0]}
             </Text>
