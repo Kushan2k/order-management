@@ -4,6 +4,7 @@ import img from "./Cluck new.png"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import { Form, Spinner } from "react-bootstrap"
+
 import {
   Document,
   Font,
@@ -27,7 +28,7 @@ const users = {
 const data = [
   {
     id: Math.random() * 1000,
-    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd34",
+    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd34sdf sdfsd fsd fsdf sdfsdds fsdf dsf sdfs dfsd fd",
     qty: 0,
     selected: false,
   },
@@ -76,15 +77,16 @@ function App() {
   const [serachtxt, setsearch] = useState("")
 
   const [genrate, setgenarate] = useState(false)
-  const [loading, setloading] = useState(0)
+  const [loading, setloading] = useState(false)
 
   const [selecteditem, setselectedItem] = useState([])
+  const [name, setName] = useState("")
+  const [stocks, setstocks] = useState(data)
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
   const [isadmin, setAdmin] = useState(false)
-  const [name, setName] = useState("")
-  const [stocks, setstocks] = useState(data)
+
   useEffect(function () {
     if (localStorage.getItem("login")) {
       if (
@@ -182,10 +184,12 @@ function App() {
             zIndex: 100,
           }}
         >
-          {loading === 1 ? (
+          {loading && genrate ? (
             <PDFDownloadLink
               onClick={() => {
-                setloading(0)
+                setstocks(data)
+                setloading(false)
+                setgenarate(false)
               }}
               document={
                 <PDF
@@ -197,11 +201,11 @@ function App() {
               }
               fileName={`${name}-${new Date().toISOString()}.pdf`}
               style={{ borderRadius: "50%", height: 70, width: 70 }}
-              className="btn btn-outline-success p-3 d-flex justify-content-center align-items-center"
+              className="btn btn-success p-3 d-flex justify-content-center align-items-center"
             >
               {({ blob, url, loading, error }) =>
                 loading ? (
-                  <Spinner variant="success" animation="border" />
+                  <Spinner variant="light" animation="border" />
                 ) : (
                   "Save"
                 )
@@ -212,7 +216,8 @@ function App() {
               variant="success"
               className="rounded"
               onClick={() => {
-                setloading(1)
+                setloading(true)
+
                 setgenarate(true)
               }}
             >
@@ -265,7 +270,7 @@ function App() {
               </div>
             </div>
 
-            {loading === 1 ? (
+            {loading && genrate ? (
               <div className="container mt-5 h-75 flex-column d-flex justify-content-center align-items-center">
                 <div className="d-flex gap-1">
                   <Spinner animation="grow" variant="success" />
@@ -384,7 +389,67 @@ function Item(props) {
   return (
     <div className="row">
       <div className="col-11 mx-auto">
-        <div className="card my-2">
+        {/*card here*/}
+        <div class="card w-100 mx-auto my-2">
+          <div class="card-body ">
+            {/* <h5 class="card-title">Card title</h5> */}
+            <div className="card-title">
+              <input
+                className="form-check-input border border-primary border-2"
+                type="checkbox"
+                id={"flexCheckChecked" + props.index}
+                checked={props.item.selected}
+                onChange={(e) => {
+                  props.setitem((pre) => {
+                    let nd = pre.map((i) => {
+                      if (i.id === props.item.id) {
+                        return {
+                          ...i,
+                          selected: e.target.checked,
+                          qty: e.target.checked ? 1 : 0,
+                        }
+                      }
+                      return i
+                    })
+
+                    return nd
+                  })
+                }}
+              />
+            </div>
+
+            <label
+              className="form-check-label text-wrap card-text my-2"
+              htmlFor={"flexCheckChecked" + props.index}
+            >
+              {props.item.name}
+            </label>
+            <input
+              style={{ right: 10, bottom: 10 }}
+              readOnly={!props.item.selected}
+              type="number"
+              value={props.item.qty}
+              onChange={(e) =>
+                props.setitem((pre) => {
+                  let nd = pre.map((i) => {
+                    if (i.id === props.item.id) {
+                      return {
+                        ...i,
+                        qty: parseInt(e.target.value) > 0 ? e.target.value : "",
+                      }
+                    }
+                    return i
+                  })
+
+                  return nd
+                })
+              }
+              className="form-control w-25 form-control-sm  text-center border border-primary border-2 position-absolute"
+            />
+          </div>
+        </div>
+
+        {/* <div className="card my-2">
           <div className="card-body">
             <div className="form-check d-flex justify-content-between">
               <input
@@ -444,7 +509,7 @@ function Item(props) {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )
@@ -554,7 +619,7 @@ function PDF({ name, items, close, loading }) {
   }, [])
 
   return (
-    <Document onRender={() => null}>
+    <Document>
       <Page style={styles.body} size="A4">
         <Text style={styles.header} fixed>
           ~ Cluck PVT Ltd ~
