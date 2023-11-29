@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Context } from "./context"
 import { Spinner } from "react-bootstrap"
-import { PDFDownloadLink } from "@react-pdf/renderer"
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer"
 import PDF from "./PDF"
 import { useNavigate } from "react-router-dom"
 
@@ -21,7 +21,7 @@ function Save() {
 
   return (
     <div
-      className="container mt-5 d-flex justify-content-center align-items-center position-relative"
+      className="container flex-column mt-5 d-flex justify-content-center align-items-center position-relative"
       style={{ height: "90vh" }}
     >
       <button
@@ -31,6 +31,10 @@ function Save() {
       >
         Back
       </button>
+
+      <PDFViewer>
+        <PDF name={name} items={items} loading={setloading} />
+      </PDFViewer>
 
       <div className="row">
         <p className="text-center">Genarating please wait..</p>
@@ -46,12 +50,6 @@ function Save() {
               className="btn btn-success p-3 d-flex justify-content-center align-items-center"
             >
               {({ blob, url, loading, error }) => {
-                const b = URL.createObjectURL(blob)
-                return (
-                  <a href={b} download>
-                    download
-                  </a>
-                )
                 return loading ? (
                   <Spinner variant="light" animation="border" />
                 ) : (
