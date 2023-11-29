@@ -180,9 +180,9 @@ function App() {
                 zIndex: 100,
               }}
             >
-              <Button
-                variant="success"
-                className="rounded"
+              <button
+                style={{ borderRadius: 0 }}
+                className="btn btn-success"
                 onClick={() => {
                   // setloading(true)
                   // setgenarate(true)
@@ -190,18 +190,20 @@ function App() {
                 }}
               >
                 Genarate
-              </Button>
+              </button>
             </div>
             <div className="container-fluid d-flex align-items-end justify-content-end">
               {isadmin && (
                 <button
                   onClick={handleShow}
+                  style={{ borderRadius: 0 }}
                   className="btn btn-sm btn-success me-2"
                 >
                   Add
                 </button>
               )}
               <button
+                style={{ borderRadius: 0 }}
                 onClick={() => {
                   localStorage.removeItem("login")
                   localStorage.removeItem("type")
@@ -354,11 +356,12 @@ function Item(props) {
     <div className="row">
       <div className="col-11 mx-auto">
         {/*card here*/}
-        <div className="card w-100 mx-auto my-2">
+        <div className="card w-100 mx-auto my-2" style={{ borderRadius: 0 }}>
           <div className="card-body ">
             {/* <h5 class="card-title">Card title</h5> */}
             <div className="card-title">
               <input
+                style={{ borderRadius: 0 }}
                 className="form-check-input border border-primary border-2"
                 type="checkbox"
                 id={"flexCheckChecked" + props.index}
@@ -389,7 +392,7 @@ function Item(props) {
               {props.item.name}
             </label>
             <input
-              style={{ right: 10, bottom: 10 }}
+              style={{ right: 10, bottom: 10, borderRadius: 0 }}
               readOnly={!props.item.selected}
               type="number"
               value={props.item.qty}
