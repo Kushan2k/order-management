@@ -315,7 +315,7 @@ function Item(props) {
     <div className="row">
       <div className="col-11 mx-auto">
         {/*card here*/}
-        <div className="card w-100 mx-auto my-2" style={{ borderRadius: 0 }}>
+        <div className="card w-100 mx-auto mt-1" style={{ borderRadius: 0 }}>
           <div className="card-body ">
             {/* <h5 class="card-title">Card title</h5> */}
             <div className="card-title">
@@ -342,55 +342,25 @@ function Item(props) {
                   })
                 }}
               />
-            </div>
-
-            <label
-              className="form-check-label text-capitalize text-wrap card-text my-2"
-              htmlFor={"flexCheckChecked" + props.index}
-            >
-              {props.item.name}
-            </label>
-            <input
-              style={{ right: 10, bottom: 10, borderRadius: 0 }}
-              readOnly={!props.item.selected}
-              type="number"
-              value={props.item.qty}
-              onChange={(e) =>
-                props.setitem((pre) => {
-                  let nd = pre.map((i) => {
-                    if (i.id === props.item.id) {
-                      return {
-                        ...i,
-                        qty: parseInt(e.target.value) > 0 ? e.target.value : "",
-                      }
-                    }
-                    return i
-                  })
-
-                  return nd
-                })
-              }
-              className="form-control w-25 form-control-sm  text-center border border-primary border-2 position-absolute"
-            />
-          </div>
-        </div>
-
-        {/* <div className="card my-2">
-          <div className="card-body">
-            <div className="form-check d-flex justify-content-between">
+              <label
+                className="form-check-label text-capitalize text-wrap card-text ms-2"
+                htmlFor={"flexCheckChecked" + props.index}
+              >
+                {props.item.name}
+              </label>
               <input
-                className="form-check-input border border-primary border-2"
-                type="checkbox"
-                id={"flexCheckChecked" + props.index}
-                checked={props.item.selected}
-                onChange={(e) => {
+                style={{ right: 10, bottom: 10, borderRadius: 0 }}
+                readOnly={!props.item.selected}
+                type="number"
+                value={props.item.qty}
+                onChange={(e) =>
                   props.setitem((pre) => {
                     let nd = pre.map((i) => {
                       if (i.id === props.item.id) {
                         return {
                           ...i,
-                          selected: e.target.checked,
-                          qty: e.target.checked ? 1 : 0,
+                          qty:
+                            parseInt(e.target.value) > 0 ? e.target.value : "",
                         }
                       }
                       return i
@@ -398,44 +368,12 @@ function Item(props) {
 
                     return nd
                   })
-                }}
+                }
+                className="form-control w-25 form-control-sm  text-center border border-primary border-2 position-absolute"
               />
-              <div className="d-flex align-content-center justify-content-end">
-                <label
-                  className="form-check-label text-wrap"
-                  htmlFor={"flexCheckChecked" + props.index}
-                >
-                  {props.item.name}
-                </label>
-                <input
-                  style={{ width: "20%" }}
-                  readOnly={!props.item.selected}
-                  type="number"
-                  value={props.item.qty}
-                  onChange={(e) =>
-                    props.setitem((pre) => {
-                      let nd = pre.map((i) => {
-                        if (i.id === props.item.id) {
-                          return {
-                            ...i,
-                            qty:
-                              parseInt(e.target.value) > 0
-                                ? e.target.value
-                                : "",
-                          }
-                        }
-                        return i
-                      })
-
-                      return nd
-                    })
-                  }
-                  className="form-control form-control-sm ms-2 text-center border border-primary border-2"
-                />
-              </div>
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   )
