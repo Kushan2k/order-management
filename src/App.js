@@ -168,30 +168,30 @@ function App() {
           paddingTop: 10,
         }}
       >
-        <div
-          className="position-fixed"
-          style={{
-            borderRadius: "50%",
-
-            bottom: 20,
-            right: 20,
-            zIndex: 100,
-          }}
-        >
-          <Button
-            variant="success"
-            className="rounded"
-            onClick={() => {
-              // setloading(true)
-              // setgenarate(true)
-              navigation("/save")
-            }}
-          >
-            Genarate
-          </Button>
-        </div>
         {login === 1 ? (
           <>
+            <div
+              className="position-fixed"
+              style={{
+                borderRadius: "50%",
+
+                bottom: 20,
+                right: 20,
+                zIndex: 100,
+              }}
+            >
+              <Button
+                variant="success"
+                className="rounded"
+                onClick={() => {
+                  // setloading(true)
+                  // setgenarate(true)
+                  navigation("/save")
+                }}
+              >
+                Genarate
+              </Button>
+            </div>
             <div className="container-fluid d-flex align-items-end justify-content-end">
               {isadmin && (
                 <button
@@ -297,16 +297,20 @@ function LoginForm(props) {
     props.setLogin(1)
   }
   return (
-    <div className="container">
+    <div
+      className="container d-flex flex-column justify-content-center align-items-center"
+      style={{ height: "70vh" }}
+    >
       {er ? (
-        <div className="row">
+        <div className="row w-100">
           <p className="alert mx-auto w-75 alert-danger text-center">
             Code is invalid!
           </p>
         </div>
       ) : null}
-      <div className="row">
-        <div className="col-10 col-md-6 mx-auto border border-2 p-4 ">
+      <div className="row w-100">
+        <p className="text-center">Cluck pvt ltd stock management.</p>
+        <div className="col-10 col-md-6 mx-auto border border-1 p-4 ">
           <form onSubmit={login}>
             <div className="mb-3">
               <label htmlFor="exampleInputPassword1" className="form-label">
@@ -315,13 +319,17 @@ function LoginForm(props) {
               <input
                 onChange={(e) => props.setcode(e.target.value)}
                 value={props.code}
-                type="number"
+                type="text"
                 className="form-control"
                 id="exampleInputPassword1"
               />
             </div>
 
-            <button type="submit" className="btn btn-primary">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{ borderRadius: 0 }}
+            >
               Login
             </button>
           </form>
@@ -375,7 +383,7 @@ function Item(props) {
             </div>
 
             <label
-              className="form-check-label text-wrap card-text my-2"
+              className="form-check-label text-capitalize text-wrap card-text my-2"
               htmlFor={"flexCheckChecked" + props.index}
             >
               {props.item.name}
