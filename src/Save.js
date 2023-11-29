@@ -40,7 +40,7 @@ function Save() {
             <PDFDownloadLink
               // onClick={() => navigation("/")}
               document={<PDF name={name} items={items} loading={setloading} />}
-              fileName={`${name}-${new Date().toISOString()}.pdf`}
+              fileName={`${name}-${new Date().toISOString()}`}
               style={{ borderRadius: "50%", height: 70, width: 70 }}
               className="btn btn-success p-3 d-flex justify-content-center align-items-center"
             >
