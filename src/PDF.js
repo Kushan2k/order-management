@@ -30,6 +30,7 @@ function PDF({ name, items, loading }) {
       fontSize: 24,
       textAlign: "center",
       fontFamily: "Oswald",
+      textTransform: "capitalize",
     },
     date: {
       fontSize: 12,

@@ -7,6 +7,7 @@ import { Form } from "react-bootstrap"
 
 import { useNavigate } from "react-router-dom"
 import { Context } from "./context"
+import data from "./data"
 
 const users = {
   manager: {
@@ -16,51 +17,6 @@ const users = {
     code: 1234,
   },
 }
-
-const data = [
-  {
-    id: Math.random() * 1000,
-    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd34sdf sdfsd fsd fsdf sdfsdds fsdf dsf sdfs dfsd fd",
-    qty: 0,
-    selected: false,
-  },
-  {
-    id: Math.random() * 1000,
-    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
-    qty: 0,
-    selected: false,
-  },
-  {
-    id: Math.random() * 1000,
-    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd56",
-    qty: 0,
-    selected: false,
-  },
-  {
-    id: Math.random() * 1000,
-    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
-    qty: 0,
-    selected: false,
-  },
-  {
-    id: Math.random() * 1000,
-    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
-    qty: 0,
-    selected: false,
-  },
-  {
-    id: Math.random() * 1000,
-    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
-    qty: 0,
-    selected: false,
-  },
-  {
-    id: Math.random() * 1000,
-    name: "sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsd23",
-    qty: 0,
-    selected: false,
-  },
-]
 
 function App() {
   const { login, setLogin, name, setName, stocks, setstocks } =
@@ -77,7 +33,9 @@ function App() {
   // const [stocks, setstocks] = useState(data)
 
   const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const handleShow = () => {
+    setShow(true)
+  }
   const [isadmin, setAdmin] = useState(false)
 
   useEffect(function () {
@@ -227,9 +185,10 @@ function App() {
                     className="form-control my-2 form-control-sm border border-primary border-1"
                   />
                   <input
+                    disabled
                     value={serachtxt}
                     onChange={(e) => setsearch(e.target.value)}
-                    placeholder="Search Here"
+                    placeholder="Development in progress.."
                     type="text"
                     className="form-control my-2 form-control-sm border border-primary border-1"
                   />
@@ -496,7 +455,7 @@ function PopUpModel({ show, handleClose }) {
         <Form onSubmit={save}>
           <Modal.Body>
             <div className="mb-3">
-              <label htmlFor="formGroupExampleInput" className="form-label">
+              {/* <label htmlFor="formGroupExampleInput" className="form-label">
                 Item Name
               </label>
               <input
@@ -504,14 +463,22 @@ function PopUpModel({ show, handleClose }) {
                 className="form-control"
                 id="formGroupExampleInput"
                 placeholder="Example input placeholder"
-              />
+              /> */}
+
+              <p className="alert text-center alert-danger">
+                Under Development
+              </p>
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button
+              variant="secondary"
+              style={{ borderRadius: 0 }}
+              onClick={handleClose}
+            >
               Close
             </Button>
-            <Button type="submit" variant="primary">
+            <Button style={{ borderRadius: 0 }} type="submit" variant="primary">
               Save Changes
             </Button>
           </Modal.Footer>
