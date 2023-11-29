@@ -1,20 +1,12 @@
 import "./App.css"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import img from "./Cluck new.png"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
-import { Form, Spinner } from "react-bootstrap"
+import { Form } from "react-bootstrap"
 
-import {
-  Document,
-  Font,
-  Image,
-  PDFDownloadLink,
-  Page,
-  StyleSheet,
-  Text,
-  View,
-} from "@react-pdf/renderer"
+import { useNavigate } from "react-router-dom"
+import { Context } from "./context"
 
 const users = {
   manager: {
@@ -71,17 +63,18 @@ const data = [
 ]
 
 function App() {
+  const { login, setLogin, name, setName, stocks, setstocks } =
+    useContext(Context)
+
+  const navigation = useNavigate()
   const [code, setCode] = useState(0)
-  const [login, setLogin] = useState(0)
+  // const [login, setLogin] = useState(0)
   const [show, setShow] = useState(false)
   const [serachtxt, setsearch] = useState("")
 
-  const [genrate, setgenarate] = useState(false)
-  const [loading, setloading] = useState(false)
-
   const [selecteditem, setselectedItem] = useState([])
-  const [name, setName] = useState("")
-  const [stocks, setstocks] = useState(data)
+  // const [name, setName] = useState("")
+  // const [stocks, setstocks] = useState(data)
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
@@ -99,6 +92,7 @@ function App() {
     } else {
       setLogin(0)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -184,46 +178,17 @@ function App() {
             zIndex: 100,
           }}
         >
-          {loading && genrate ? (
-            <PDFDownloadLink
-              onClick={() => {
-                setstocks(data)
-                setloading(false)
-                setgenarate(false)
-              }}
-              document={
-                <PDF
-                  name={name}
-                  items={stocks}
-                  close={setgenarate}
-                  loading={setloading}
-                />
-              }
-              fileName={`${name}-${new Date().toISOString()}.pdf`}
-              style={{ borderRadius: "50%", height: 70, width: 70 }}
-              className="btn btn-success p-3 d-flex justify-content-center align-items-center"
-            >
-              {({ blob, url, loading, error }) =>
-                loading ? (
-                  <Spinner variant="light" animation="border" />
-                ) : (
-                  "Save"
-                )
-              }
-            </PDFDownloadLink>
-          ) : (
-            <Button
-              variant="success"
-              className="rounded"
-              onClick={() => {
-                setloading(true)
-
-                setgenarate(true)
-              }}
-            >
-              Genarate
-            </Button>
-          )}
+          <Button
+            variant="success"
+            className="rounded"
+            onClick={() => {
+              // setloading(true)
+              // setgenarate(true)
+              navigation("/save")
+            }}
+          >
+            Genarate
+          </Button>
         </div>
         {login === 1 ? (
           <>
@@ -270,16 +235,7 @@ function App() {
               </div>
             </div>
 
-            {loading && genrate ? (
-              <div className="container mt-5 h-75 flex-column d-flex justify-content-center align-items-center">
-                <div className="d-flex gap-1">
-                  <Spinner animation="grow" variant="success" />
-                </div>
-                <p>Generating....</p>
-              </div>
-            ) : (
-              <Main setstock={setstocks} stock={stocks} />
-            )}
+            <Main setstock={setstocks} stock={stocks} />
           </>
         ) : (
           <LoginForm
@@ -390,8 +346,8 @@ function Item(props) {
     <div className="row">
       <div className="col-11 mx-auto">
         {/*card here*/}
-        <div class="card w-100 mx-auto my-2">
-          <div class="card-body ">
+        <div className="card w-100 mx-auto my-2">
+          <div className="card-body ">
             {/* <h5 class="card-title">Card title</h5> */}
             <div className="card-title">
               <input
@@ -551,151 +507,6 @@ function PopUpModel({ show, handleClose }) {
         </Form>
       </Modal>
     </>
-  )
-}
-
-function PDF({ name, items, close, loading }) {
-  const [pdfitems, setitems] = useState([])
-  Font.register({
-    family: "Oswald",
-    src: "https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf",
-  })
-
-  const styles = StyleSheet.create({
-    logo: {
-      width: 70,
-      height: 70,
-    },
-    body: {
-      paddingTop: 35,
-      paddingBottom: 65,
-      paddingHorizontal: 35,
-    },
-    title: {
-      fontSize: 24,
-      textAlign: "center",
-      fontFamily: "Oswald",
-    },
-    date: {
-      fontSize: 12,
-      textAlign: "center",
-      marginBottom: 40,
-    },
-    subtitle: {
-      fontSize: 18,
-      margin: 12,
-      fontFamily: "Oswald",
-    },
-    text: {
-      margin: 12,
-      fontSize: 14,
-      textAlign: "justify",
-      fontFamily: "Oswald",
-    },
-    image: {
-      marginVertical: 15,
-      marginHorizontal: 100,
-    },
-    header: {
-      fontSize: 12,
-      marginBottom: 20,
-      textAlign: "center",
-      color: "grey",
-    },
-    pageNumber: {
-      position: "absolute",
-      fontSize: 12,
-      bottom: 30,
-      left: 0,
-      right: 0,
-      textAlign: "center",
-      color: "grey",
-    },
-  })
-
-  useEffect(() => {
-    setitems(items.filter((item) => item.selected))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return (
-    <Document>
-      <Page style={styles.body} size="A4">
-        <Text style={styles.header} fixed>
-          ~ Cluck PVT Ltd ~
-        </Text>
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: 10,
-          }}
-        >
-          <Image style={styles.logo} src={img} />
-          <View>
-            <Text style={styles.title}>{name}</Text>
-            <Text style={styles.date}>
-              {new Date().toISOString().split("T")[0]}
-            </Text>
-          </View>
-        </View>
-
-        <Text style={styles.text}>Items</Text>
-        <View style={{ borderBottom: "1px solid black", height: 10 }}></View>
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <View
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingHorizontal: 10,
-              marginVertical: 10,
-              flexDirection: "row",
-              width: "80%",
-            }}
-          >
-            <Text>Item</Text>
-            <Text>QTY</Text>
-          </View>
-          {pdfitems.length > 0 &&
-            pdfitems.map((item, index) => {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    marginTop: 10,
-                    width: "80%",
-                    paddingHorizontal: 10,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    flexDirection: "row",
-                  }}
-                >
-                  <Text style={styles.date}>{item.name}</Text>
-                  <Text style={styles.date}>{item.qty}</Text>
-                </View>
-              )
-            })}
-        </View>
-
-        <Text
-          style={styles.pageNumber}
-          render={({ pageNumber, totalPages }) =>
-            `${pageNumber} / ${totalPages}`
-          }
-          fixed
-        />
-      </Page>
-    </Document>
   )
 }
 

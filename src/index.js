@@ -4,11 +4,21 @@ import ReactDOM from "react-dom/client"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import "bootstrap/dist/css/bootstrap.min.css"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Save from "./Save"
+import DataContext from "./context"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
   <React.StrictMode>
-    <App />
+    <DataContext>
+      <Router>
+        <Routes>
+          <Route path="/" Component={App} />
+          <Route path="/save" lazy Component={Save} />
+        </Routes>
+      </Router>
+    </DataContext>
   </React.StrictMode>
 )
 
