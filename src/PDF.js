@@ -34,7 +34,7 @@ function PDF({ name, items, loading }) {
     date: {
       fontSize: 12,
       textAlign: "center",
-      marginBottom: 40,
+      marginBottom: 20,
     },
     subtitle: {
       fontSize: 18,
@@ -115,10 +115,12 @@ function PDF({ name, items, loading }) {
             <Text>Item</Text>
             <Text>QTY</Text>
           </View>
+
           {items.length > 0 &&
             items.map((item, index) => {
               return (
                 <View
+                  fixed
                   key={index}
                   style={{
                     marginTop: 10,
