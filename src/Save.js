@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Context } from "./context"
 import { Spinner } from "react-bootstrap"
-import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer"
+import { PDFDownloadLink } from "@react-pdf/renderer"
 import PDF from "./PDF"
 import { useNavigate } from "react-router-dom"
 
@@ -31,10 +31,6 @@ function Save() {
       >
         Back
       </button>
-
-      <PDFViewer>
-        <PDF name={name} items={items} loading={setloading} />
-      </PDFViewer>
 
       <div className="row">
         <p className="text-center">Genarating please wait..</p>

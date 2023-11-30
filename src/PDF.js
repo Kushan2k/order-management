@@ -1,6 +1,5 @@
 import {
   Document,
-  Font,
   Image,
   Page,
   StyleSheet,
@@ -11,10 +10,10 @@ import {
 import img from "./Cluck new.png"
 
 function PDF({ name, items, loading }) {
-  Font.register({
-    family: "Oswald",
-    src: "https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf",
-  })
+  // Font.register({
+  //   family: "Oswald",
+  //   src: "https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf",
+  // })
 
   const styles = StyleSheet.create({
     logo: {
@@ -29,7 +28,7 @@ function PDF({ name, items, loading }) {
     title: {
       fontSize: 24,
       textAlign: "center",
-      fontFamily: "Oswald",
+      // fontFamily: "Oswald",
       textTransform: "capitalize",
     },
     date: {
@@ -40,13 +39,13 @@ function PDF({ name, items, loading }) {
     subtitle: {
       fontSize: 18,
       margin: 12,
-      fontFamily: "Oswald",
+      // fontFamily: "Oswald",
     },
     text: {
       margin: 12,
       fontSize: 14,
       textAlign: "justify",
-      fontFamily: "Oswald",
+      // fontFamily: "Oswald",
     },
     image: {
       marginVertical: 15,
