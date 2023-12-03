@@ -115,8 +115,48 @@ function PDF({ name, items, loading }) {
             <Text>Item</Text>
             <Text>QTY</Text>
           </View>
+          <View
+            fixed
+            render={() => {
+              return items.map((item, index) => {
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <Text style={styles.date}>{item.name}</Text>
+                    <Text style={styles.date}>{item.qty}</Text>
+                  </View>
+                )
+              })
+            }}
+            style={{
+              marginTop: 10,
+              width: "80%",
+              paddingHorizontal: 10,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          ></View>
 
-          {items.length > 0 &&
+          {/* {items.map((item, index) => {
+            return (
+              <View key={index}>
+                <Text style={styles.date}>{item.name}</Text>
+                <Text style={styles.date}>{item.qty}</Text>
+              </View>
+            )
+          })} */}
+
+          {/* {items.length > 0 &&
             items.map((item, index) => {
               return (
                 <View
@@ -136,7 +176,7 @@ function PDF({ name, items, loading }) {
                   <Text style={styles.date}>{item.qty}</Text>
                 </View>
               )
-            })}
+            })} */}
         </View>
 
         <Text
