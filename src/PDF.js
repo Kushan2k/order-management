@@ -28,6 +28,7 @@ function PDF({ name, items, loading }) {
     title: {
       fontSize: 24,
       textAlign: "center",
+      fontFamily: "Courier",
       // fontFamily: "Oswald",
       textTransform: "capitalize",
     },
@@ -39,12 +40,15 @@ function PDF({ name, items, loading }) {
     subtitle: {
       fontSize: 18,
       margin: 12,
+      fontFamily: "Courier",
+
       // fontFamily: "Oswald",
     },
     text: {
       margin: 12,
       fontSize: 14,
       textAlign: "justify",
+      fontFamily: "Courier",
       // fontFamily: "Oswald",
     },
     image: {
@@ -130,8 +134,8 @@ function PDF({ name, items, loading }) {
                       flexDirection: "row",
                     }}
                   >
-                    <Text style={styles.date}>{item.name}</Text>
-                    <Text style={styles.date}>{item.qty}</Text>
+                    <Text style={styles.date}>{item?.name}</Text>
+                    <Text style={styles.date}>{item?.qty}</Text>
                   </View>
                 )
               })
