@@ -33,7 +33,15 @@ function Save() {
       </button>
 
       <div className="row">
-        {loading && <p className="text-center">Genarating please wait..</p>}
+        {loading && (
+          <div
+            className="container p-4 d-flex justify-content-center align-items-center flex-column
+          "
+          >
+            <p className="text-center">Genarating please wait..</p>
+            <Spinner variant="success" animation="grow" />
+          </div>
+        )}
 
         <PDFViewer height={window.innerHeight - 30}>
           <PDF name={name} items={items} loading={setloading} />
