@@ -10,16 +10,14 @@ import DataContext from "./context"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
-  <React.StrictMode>
-    <DataContext>
-      <Router>
-        <Routes>
-          <Route path="/" Component={App} />
-          <Route path="/save" lazy Component={Save} />
-        </Routes>
-      </Router>
-    </DataContext>
-  </React.StrictMode>
+  <DataContext>
+    <Router>
+      <Routes>
+        <Route path="/" Component={App} />
+        <Route path="/save" lazy Component={Save} />
+      </Routes>
+    </Router>
+  </DataContext>
 )
 
 // If you want to start measuring performance in your app, pass a function

@@ -8,6 +8,8 @@ import { Form } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { Context } from "./context"
 import data from "./data"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
 
 const users = {
   manager: {
@@ -196,7 +198,9 @@ function App() {
               </div>
             </div>
 
-            <Main setstock={setstocks} stock={stocks} />
+            <div id="stock" className="w-100">
+              <Main setstock={setstocks} stock={stocks} />
+            </div>
           </>
         ) : (
           <LoginForm
@@ -303,7 +307,7 @@ function LoginForm(props) {
 function Main({ setstock, stock }) {
   return stock.map((item, index) => {
     return (
-      <div className="container-fluid" key={index}>
+      <div className="container-fluid items-container" key={index}>
         <Item item={item} stock={stock} setitem={setstock} index={index} />
       </div>
     )
