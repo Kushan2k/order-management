@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react"
+import App from "./App"
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+test("creates the ui for the list", () => {
+  render(<App />)
+
+  const ele = screen.getAllByText("stock")
+
+  expect(typeof ele).toBe(Array)
+})

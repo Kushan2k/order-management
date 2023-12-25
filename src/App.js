@@ -8,15 +8,13 @@ import { Form } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { Context } from "./context"
 import data from "./data"
-import html2canvas from "html2canvas"
-import jsPDF from "jspdf"
 
 const users = {
   manager: {
     code: 9876,
   },
   admin: {
-    code: 1234,
+    code: 5467,
   },
 }
 
@@ -183,6 +181,7 @@ function App() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Company Name"
+                    required
                     type="text"
                     className="form-control my-2 form-control-sm border border-primary border-1"
                   />

@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react"
 import { Context } from "./context"
 import { Spinner } from "react-bootstrap"
-import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer"
-import PDF from "./PDF"
+
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
+
 import html2canvas from "html2canvas"
 import jsPDF from "jspdf"
+import logo from "./Cluck new.png"
 
 function Save() {
   const navigation = useNavigate()
@@ -19,40 +19,27 @@ function Save() {
   useEffect(() => {
     const l = stocks.filter((item) => item.selected)
     setitems(l)
-
-    // fetch("http://localhost:8080/api/save.php", {
-    //   method: "get",
-    //   mode: "no-cors",
-    // })
-    //   .then((res) => res.blob())
-    //   .then((data) => {
-    //     const d = data
-
-    //     const uri = window.URL.createObjectURL(new Blob(d))
-    //     const a = document.createElement("a")
-    //     a.href = uri
-    //     a.setAttribute("download", "test.pdf")
-    //     document.body.appendChild(a)
-    //     a.click()
-    //   })
-    //   .catch((er) => {
-    //     console.log(er)
-    //   })
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function getPDF() {
     const view = document.getElementById("stock")
+    setloading(true)
 
-    html2canvas(view).then((canvas) => {
-      const uri = canvas.toDataURL("image/png", 1)
-      const doc = new jsPDF()
-      const w = doc.internal.pageSize.getWidth()
-      const h = doc.internal.pageSize.getHeight()
-      doc.addImage(uri, "PNG", 0, 0, w, h)
-      doc.save(`${new Date().toISOString().split("T")[0]}.pdf`)
-    })
+    html2canvas(view)
+      .then((canvas) => {
+        const uri = canvas.toDataURL("image/png", 1.0)
+        const doc = new jsPDF()
+        const w = doc.internal.pageSize.getWidth()
+        const h = doc.internal.pageSize.getHeight()
+        doc.addImage(uri, "PNG", 0, 0, w, h)
+        doc.save(`${name}-${new Date().toISOString().split("T")[0]}.pdf`)
+        setloading(false)
+      })
+      .catch((er) => {
+        alert("Could not generate PDF please try again!")
+        setloading(false)
+      })
   }
 
   return (
@@ -63,17 +50,19 @@ function Save() {
       <button
         onClick={() => navigation("/")}
         style={{ bottom: 20, right: 30, zIndex: 100 }}
-        className="btn btn-warning position-absolute"
+        className="btn btn-warning position-fixed"
       >
         Back
       </button>
-      <button
-        onClick={() => getPDF()}
-        style={{ bottom: 20, right: 100, zIndex: 100 }}
-        className="btn btn-warning position-absolute"
-      >
-        Download
-      </button>
+      {!loading && (
+        <button
+          onClick={() => getPDF()}
+          style={{ bottom: 20, right: 100, zIndex: 100 }}
+          className="btn btn-warning position-fixed"
+        >
+          Download
+        </button>
+      )}
 
       <div className="row">
         {loading && (
@@ -89,44 +78,41 @@ function Save() {
         {!loading && (
           <div
             id="stock"
-            className="d-flexflex-column justify-content-center align-items-center"
+            className="container-fluid d-flexflex-column justify-content-center align-items-center"
           >
-            {items.map((item, index) => (
-              <div className="card my-2" key={index}>
-                <div className="card-body">
-                  <p>{item.name}</p>
-                  <p>{item.qty}</p>
+            <div className="row my-3">
+              <div className="col-12 d-flex justify-content-between align-items-center">
+                <img src={logo} width={70} height={70} alt="logo" />
+                <div className="text-end pe-4">
+                  <p className="fw-bold">{name}</p>
+                  <p className="fw-bold">
+                    {new Date().toISOString().split("T")[0]}
+                  </p>
                 </div>
               </div>
-            ))}
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <table className="table table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th>Qty</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {items.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.name}</td>
+                        <td>{item.qty}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         )}
-
-        {/* <PDFViewer height={window.innerHeight - 30}>
-          <PDF name={name} items={items} loading={setloading} />
-        </PDFViewer> */}
-
-        {/* <div className="col-6 mx-auto d-flex justify-content-center align-items-center">
-          {loading ? (
-            <Spinner animation="grow" variant="success" />
-          ) : (
-            <PDFDownloadLink
-              // onClick={() => navigation("/")}
-              document={<PDF name={name} items={items} loading={setloading} />}
-              fileName={`${name}-${new Date().toISOString()}.pdf`}
-              style={{ borderRadius: "50%", height: 70, width: 70 }}
-              className="btn btn-success p-3 d-flex justify-content-center align-items-center"
-            >
-              {({ blob, url, loading, error }) => {
-                return loading ? (
-                  <Spinner variant="light" animation="border" />
-                ) : (
-                  "Save"
-                )
-              }}
-            </PDFDownloadLink>
-          )}
-        </div> */}
       </div>
     </div>
   )
