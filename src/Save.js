@@ -32,7 +32,7 @@ function Save() {
         const doc = new jsPDF()
         const w = doc.internal.pageSize.getWidth()
         const h = doc.internal.pageSize.getHeight()
-        doc.addImage(uri, "PNG", 0, 0, w, h)
+        doc.addImage(uri, "png", 0, 0, w, h)
         doc.save(`${name}-${new Date().toISOString().split("T")[0]}.pdf`)
         setloading(false)
       })

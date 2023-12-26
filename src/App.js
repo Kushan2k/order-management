@@ -24,13 +24,11 @@ function App() {
 
   const navigation = useNavigate()
   const [code, setCode] = useState(0)
-  // const [login, setLogin] = useState(0)
+
   const [show, setShow] = useState(false)
   const [serachtxt, setsearch] = useState("")
 
   const [selecteditem, setselectedItem] = useState([])
-  // const [name, setName] = useState("")
-  // const [stocks, setstocks] = useState(data)
 
   const handleClose = () => setShow(false)
   const handleShow = () => {
@@ -61,7 +59,8 @@ function App() {
       let nd = data.map((i) => {
         if (selecteditem.includes(i.id)) {
           return {
-            ...selecteditem.find((l) => l.id === i.id),
+            ...i,
+            selected: true,
           }
         }
         return i
@@ -74,6 +73,7 @@ function App() {
     const newl = stocks.filter((item) =>
       item.name.toLowerCase().includes(serachtxt.toLowerCase())
     )
+
     setstocks(newl)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serachtxt])
@@ -178,6 +178,7 @@ function App() {
               <div className="row">
                 <div className="col-10 mx-auto">
                   <input
+                    id="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Company Name"
@@ -186,7 +187,7 @@ function App() {
                     className="form-control my-2 form-control-sm border border-primary border-1"
                   />
                   <input
-                    disabled
+                    id="search"
                     value={serachtxt}
                     onChange={(e) => setsearch(e.target.value)}
                     placeholder="Development in progress.."
