@@ -315,6 +315,8 @@ function Main({ setstock, stock }) {
 }
 
 function Item(props) {
+  const [itemq, setItemq] = useState(props.item.qty)
+
   return (
     <div className="row">
       <div className="col-11 mx-auto">
@@ -322,59 +324,110 @@ function Item(props) {
         <div className="card w-100 mx-auto mt-1" style={{ borderRadius: 0 }}>
           <div className="card-body ">
             {/* <h5 class="card-title">Card title</h5> */}
-            <div className="card-title">
-              <input
-                style={{ borderRadius: 0 }}
-                className="form-check-input border border-primary border-2"
-                type="checkbox"
-                id={"flexCheckChecked" + props.index}
-                checked={props.item.selected}
-                onChange={(e) => {
-                  props.setitem((pre) => {
-                    let nd = pre.map((i) => {
-                      if (i.id === props.item.id) {
-                        return {
-                          ...i,
-                          selected: e.target.checked,
-                          qty: e.target.checked ? 1 : 0,
+            <div className="card-title d-flex justify-content-between px-2">
+              <div className="w-75">
+                <input
+                  style={{ borderRadius: 0 }}
+                  className="form-check-input border border-primary border-2"
+                  type="checkbox"
+                  id={"flexCheckChecked" + props.index}
+                  checked={props.item.selected}
+                  onChange={(e) => {
+                    props.setitem((pre) => {
+                      let nd = pre.map((i) => {
+                        if (i.id === props.item.id) {
+                          return {
+                            ...i,
+                            selected: e.target.checked,
+                            qty: e.target.checked ? 1 : 0,
+                          }
                         }
-                      }
-                      return i
-                    })
+                        return i
+                      })
 
-                    return nd
-                  })
-                }}
-              />
-              <label
-                className="form-check-label text-capitalize text-wrap card-text ms-2"
-                htmlFor={"flexCheckChecked" + props.index}
-              >
-                {props.item.name}
-              </label>
-              <input
-                style={{ right: 10, bottom: 10, borderRadius: 0 }}
-                readOnly={!props.item.selected}
-                type="number"
-                value={props.item.qty}
-                onChange={(e) =>
-                  props.setitem((pre) => {
-                    let nd = pre.map((i) => {
-                      if (i.id === props.item.id) {
-                        return {
-                          ...i,
-                          qty:
-                            parseInt(e.target.value) > 0 ? e.target.value : "",
+                      return nd
+                    })
+                  }}
+                />
+                <label
+                  className="form-check-label text-capitalize text-wrap card-text ms-2"
+                  htmlFor={"flexCheckChecked" + props.index}
+                >
+                  {props.item.name}
+                </label>
+              </div>
+              <div className="d-flex flex-row gap-1 justify-content-end">
+                <button
+                  disabled={!props.item.selected}
+                  className="btn btn-sm btn-success fw-bolder"
+                  onClick={() => {
+                    setItemq(itemq + 1)
+                    props.setitem((pre) => {
+                      let nd = pre.map((i) => {
+                        if (i.id === props.item.id) {
+                          return {
+                            ...i,
+                            qty: parseInt(itemq) > 0 ? itemq : "",
+                          }
                         }
-                      }
-                      return i
-                    })
+                        return i
+                      })
 
-                    return nd
-                  })
-                }
-                className="form-control w-25 form-control-sm  text-center border border-primary border-2 position-absolute"
-              />
+                      return nd
+                    })
+                  }}
+                >
+                  +
+                </button>
+
+                <input
+                  style={{ borderRadius: 0 }}
+                  readOnly={!props.item.selected}
+                  type="number"
+                  value={itemq >= 0 ? itemq : 0}
+                  onChange={(e) =>
+                    props.setitem((pre) => {
+                      let nd = pre.map((i) => {
+                        if (i.id === props.item.id) {
+                          return {
+                            ...i,
+                            qty:
+                              parseInt(e.target.value) > 0
+                                ? e.target.value
+                                : "",
+                          }
+                        }
+                        return i
+                      })
+
+                      return nd
+                    })
+                  }
+                  className="form-control w-25 form-control-sm  text-center border border-primary border-2 fw-bold"
+                />
+                <button
+                  disabled={!props.item.selected}
+                  className="btn btn-sm btn-success fw-bolder"
+                  onClick={() => {
+                    setItemq(itemq - 1)
+                    props.setitem((pre) => {
+                      let nd = pre.map((i) => {
+                        if (i.id === props.item.id) {
+                          return {
+                            ...i,
+                            qty: parseInt(itemq) > 0 ? itemq : "",
+                          }
+                        }
+                        return i
+                      })
+
+                      return nd
+                    })
+                  }}
+                >
+                  -
+                </button>
+              </div>
             </div>
           </div>
         </div>
