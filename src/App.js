@@ -385,7 +385,8 @@ function Item(props) {
                   readOnly={!props.item.selected}
                   type="number"
                   value={itemq >= 0 ? itemq : 0}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    // setItemq(parseInt(e.target.value))
                     props.setitem((pre) => {
                       let nd = pre.map((i) => {
                         if (i.id === props.item.id) {
@@ -402,7 +403,7 @@ function Item(props) {
 
                       return nd
                     })
-                  }
+                  }}
                   className="form-control w-25 form-control-sm  text-center border border-primary border-2 fw-bold"
                 />
                 <button

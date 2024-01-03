@@ -5,7 +5,7 @@ import { Spinner } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 
 import html2canvas from "html2canvas"
-import jsPDF from "jspdf"
+// import jsPDF from "jspdf"
 import logo from "./Cluck new.png"
 
 function Save() {
@@ -22,6 +22,15 @@ function Save() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  function dataURItoBlob(dataURI) {
+    var binary = atob(dataURI.split(",")[1])
+    var array = []
+    for (var i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i))
+    }
+    return new Blob([new Uint8Array(array)], { type: "image/png" })
+  }
+
   async function getPDF() {
     const view = document.getElementById("stock")
     setloading(true)
@@ -29,11 +38,19 @@ function Save() {
     html2canvas(view)
       .then((canvas) => {
         const uri = canvas.toDataURL("image/png", 1.0)
-        const doc = new jsPDF()
-        const w = doc.internal.pageSize.getWidth()
-        const h = doc.internal.pageSize.getHeight()
-        doc.addImage(uri, "png", 0, 0, w, h)
-        doc.save(`${name}-${new Date().toISOString().split("T")[0]}.pdf`)
+
+        const imguri = URL.createObjectURL(dataURItoBlob(uri))
+
+        const a = document.createElement("a")
+        a.href = imguri
+        a.download = `${name}-${new Date().toISOString().split("T")[0]}.png`
+        document.body.appendChild(a)
+        a.click()
+        // const doc = new jsPDF()
+        // const w = doc.internal.pageSize.getWidth()
+        // const h = doc.internal.pageSize.getHeight()
+        // doc.addImage(uri, "png", 0, 0, w, h)
+        // doc.save(`${name}-${new Date().toISOString().split("T")[0]}.pdf`)
         setloading(false)
       })
       .catch((er) => {
