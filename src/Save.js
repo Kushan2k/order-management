@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"
 import html2canvas from "html2canvas"
 // import jsPDF from "jspdf"
 import logo from "./Cluck new.png"
+import jsPDF from "jspdf"
 
 function Save() {
   const navigation = useNavigate()
@@ -37,23 +38,51 @@ function Save() {
 
     html2canvas(view)
       .then((canvas) => {
-        const uri = canvas.toDataURL("image/png", 1.0)
+        // const uri = canvas.toDataURL("image/png", 1.0)
 
-        const imguri = URL.createObjectURL(dataURItoBlob(uri))
+        // const imguri = URL.createObjectURL(dataURItoBlob(uri))
 
-        const a = document.createElement("a")
-        a.href = imguri
-        a.download = `${name}-${new Date().toISOString().split("T")[0]}.png`
-        document.body.appendChild(a)
-        a.click()
-        // const doc = new jsPDF()
-        // const w = doc.internal.pageSize.getWidth()
-        // const h = doc.internal.pageSize.getHeight()
-        // doc.addImage(uri, "png", 0, 0, w, h)
-        // doc.save(`${name}-${new Date().toISOString().split("T")[0]}.pdf`)
+        // const a = document.createElement("a")
+        // a.href = imguri
+        // a.download = `${name}-${new Date().toISOString().split("T")[0]}.png`
+        // document.body.appendChild(a)
+
+        // a.click()
+        const doc = new jsPDF({ orientation: "p", unit: "px" })
+        const w = doc.internal.pageSize.getWidth()
+        doc.addImage(logo, "PNG", w / 2 - 25, 10, 50, 50)
+        doc.setFontSize(13)
+        doc.text("Cluck Pvt Ltd.", w / 2, 75, null, null, "center")
+        doc.text("cluckpvtltd@gmail.com", w / 2, 90, null, null, "center")
+        doc.text("Pallewela , udubaddwa", w / 2, 105, null, null, "center")
+        doc.text("0775550255", w / 2, 120, null, null, "center")
+
+        doc.setFontSize(15)
+        doc.text(name ? name : "Undifined!", 20, 145)
+        doc.text(new Date().toISOString().split("T")[0], 20, 160)
+
+        let line = 190
+        doc.setFontSize(16)
+
+        doc.text("Item", 20, line, { align: "left" })
+        doc.text("QTY", w / 2, line, {
+          align: "right",
+        })
+        doc.setFontSize(15)
+        line += 35
+        items.forEach((item, index) => {
+          doc.text(item.name.toString(), 20, line)
+          doc.text(item.qty.toString(), w / 2, line, {
+            align: "right",
+          })
+          line += 20
+        })
+        doc.save(`${name}-${new Date().toISOString().split("T")[0]}.pdf`)
+
         setloading(false)
       })
       .catch((er) => {
+        alert(er)
         alert("Could not generate PDF please try again!")
         setloading(false)
       })

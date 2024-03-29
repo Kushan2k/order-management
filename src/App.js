@@ -386,7 +386,6 @@ function Item(props) {
                   type="number"
                   value={itemq >= 0 ? itemq : 0}
                   onChange={(e) => {
-                    // setItemq(parseInt(e.target.value))
                     props.setitem((pre) => {
                       let nd = pre.map((i) => {
                         if (i.id === props.item.id) {
@@ -400,11 +399,10 @@ function Item(props) {
                         }
                         return i
                       })
-
                       return nd
                     })
                   }}
-                  className="form-control w-25 form-control-sm  text-center border border-primary border-2 fw-bold"
+                  className="form-control w-50 form-control-sm  text-center border border-primary border-2 fw-bold"
                 />
                 <button
                   disabled={!props.item.selected}
