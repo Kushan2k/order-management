@@ -186,14 +186,6 @@ function App() {
                     type="text"
                     className="form-control my-2 form-control-sm border border-primary border-1"
                   />
-                  <input
-                    id="search"
-                    value={serachtxt}
-                    onChange={(e) => setsearch(e.target.value)}
-                    placeholder="Development in progress.."
-                    type="text"
-                    className="form-control my-2 form-control-sm border border-primary border-1"
-                  />
                 </div>
               </div>
             </div>
@@ -305,13 +297,27 @@ function LoginForm(props) {
 }
 
 function Main({ setstock, stock }) {
-  return stock.map((item, index) => {
-    return (
-      <div className="container-fluid items-container" key={index}>
-        <Item item={item} stock={stock} setitem={setstock} index={index} />
+  return (
+    <div className="container-fluid">
+      <div className="container">
+        <input
+          id="search"
+          value={""}
+          onChange={(e) => null}
+          placeholder="Development in progress.."
+          type="text"
+          className="form-control my-2 form-control-sm border border-primary border-1"
+        />
       </div>
-    )
-  })
+      {stock.map((item, index) => {
+        return (
+          <div className="container-fluid items-container my-1" key={index}>
+            <Item item={item} stock={stock} setitem={setstock} index={index} />
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 function Item(props) {
