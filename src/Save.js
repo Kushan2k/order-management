@@ -117,7 +117,7 @@ function Save() {
           "
           >
             <p className="text-center">Genarating please wait..</p>
-            <Spinner variant="success" animation="grow" />
+            <Spinner variant="success" animation="border" />
           </div>
         )}
 
